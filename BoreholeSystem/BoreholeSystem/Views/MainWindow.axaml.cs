@@ -8,8 +8,6 @@ namespace BoreholeSystem.Views
         public MainWindow()
         {
             InitializeComponent();
-            App.TabsControl = TabsControl;
-            TabsControl.Content = new MainViewModel();
         }
     }
 }

@@ -1,0 +1,126 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:progRing="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing"
+             xmlns:vm="clr-namespace:BoreholeSystem.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="BoreholeSystem.Views.InclinometerControlView"
+             x:DataType="vm:InclinometerControlViewModel">
+	<Design.DataContext>
+		<vm:InclinometerControlViewModel />
+	</Design.DataContext>
+	<UserControl.Styles>
+		<!-- Общие стили -->
+		<Style Selector="ComboBox">
+			<Setter Property="Margin" Value="0 10 0 0"/>
+			<Setter Property="Background" Value="#333"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#444"/>
+			<Setter Property="Padding" Value="10"/>
+			
+			
+		</Style>
+
+		<!-- Стиль для ComboBoxItem -->
+		<Style Selector="ComboBoxItem">
+			<Setter Property="Background" Value="#333"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="Padding" Value="10"/>
+			<Setter Property="BorderBrush" Value="#444"/>
+		</Style>
+		<!-- Стиль для Button -->
+		<Style Selector="Button">
+			<Setter Property="Background" Value="#4CAF50"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#388E3C"/>
+			<Setter Property="CornerRadius" Value="5"/>
+			<Setter Property="Padding" Value="10"/>
+			<Setter Property="FontWeight" Value="Bold"/>	
+			<Setter Property="Margin" Value="0 10 0 0"/>
+			<Setter Property="HorizontalAlignment" Value="Stretch"/>
+		</Style>
+		<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="White" />
+			<Setter Property="BorderBrush" Value="#388E3C" />
+			<Setter Property="TextBlock.Foreground" Value="Black" />
+		</Style>
+		<!-- Стиль для TextBlock -->
+		<Style Selector="TextBlock">
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+	</UserControl.Styles>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="0.3*"/>
+			<ColumnDefinition Width="0.7*"/>
+		</Grid.ColumnDefinitions>
+		<Border ZIndex="1" Margin="-10,0,0,0" Grid.Column="0" Background="#2D2D2D" CornerRadius="10" Padding="10">
+			<StackPanel>
+				<!-- Заголовок -->
+				<TextBlock HorizontalAlignment="Center" Text="Выбор устройства" FontSize="32" FontWeight="Bold" Margin="0 0 0 20"/>
+
+				<!-- Комбобокс для выбора COM-порта -->
+				<ComboBox HorizontalAlignment="Center"
+          x:Name="DeviceComboBox" ItemsSource="{Binding AvailablePorts}"
+                      SelectedItem="{Binding SelectedPort}"
+						  FontSize="22"
+          PlaceholderText="Выберите порт...">
+					<ComboBox.Resources>
+						<SolidColorBrush x:Key="ComboBoxPlaceHolderForeground" Color="White" />
+						<SolidColorBrush x:Key="ComboBoxPlaceHolderForegroundFocused" Color="White" />
+						<SolidColorBrush x:Key="ComboBoxPlaceHolderForegroundFocusedPressed" Color="White" />
+					</ComboBox.Resources>
+					</ComboBox>
+
+				<!-- Кнопка подтверждения -->
+				<Button FontSize="22" HorizontalAlignment="Center" Content="Подтвердить" Command="{Binding ConfirmCommand}"/>
+
+				<!-- Разделитель -->
+				<Separator Margin="0 20 0 20"/>
+
+				<!-- Статус устройства -->
+				<StackPanel HorizontalAlignment="Center">
+					<TextBlock FontSize="22" HorizontalAlignment="Center" Text="Статус устройства" Margin="0,0,0,20"></TextBlock>
+					<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+						<Ellipse Width="10" Height="10" Fill="{Binding DeviceStatusColor}" Margin="0 0 10 0"/>
+						<TextBlock FontSize="22" HorizontalAlignment="Center" Text="{Binding DeviceStatus}"/>
+					</StackPanel>
+				</StackPanel>
+			</StackPanel>
+		</Border>
+
+		<Grid ZIndex="0" Grid.Column="1">
+			<Grid.ColumnDefinitions>
+				
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="0.07*"/>
+				<RowDefinition Height="0.85*"/>
+				<RowDefinition Height="0.20*"/>
+			</Grid.RowDefinitions>
+			<StackPanel Margin="-10,10,0,0" Grid.Row="0">
+				<TextBlock HorizontalAlignment="Center" Text="Полученные данные" FontSize="32" Foreground="Black" FontWeight="Bold" Margin="0 0 0 20"/>
+				
+			</StackPanel>
+			<StackPanel Grid.Row="1" Margin="10,10,0,0">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock FontSize="22" Text="Значение по оси Y: " Foreground="Black"/>
+					<TextBlock FontSize="22" Text="{Binding OxisY}" Foreground="Black"/>
+				</StackPanel>
+				<StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+					<TextBlock FontSize="22" Text="Значение по оси X: " Foreground="Black"/>
+					<TextBlock FontSize="22" Text="{Binding OxisX}" Foreground="Black"/>
+				</StackPanel>
+			</StackPanel>
+			<StackPanel Grid.Row="2" >
+
+				<Button Foreground="White" FontSize="22" HorizontalAlignment="Center" Content="Получить данные" Command="{Binding WorkCommand}"/>
+				<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+					<TextBlock FontSize="22" IsVisible="{Binding IsLoading}" VerticalAlignment="Center" Foreground="Black" Text="Идет загрузка данных"></TextBlock>
+					<progRing:ProgressRing Margin="10,0,0,0" IsActive="{Binding IsLoading}" Width="30" Height="30" />
+				</StackPanel>
+			</StackPanel>
+		</Grid>
+	</Grid>
+</UserControl>

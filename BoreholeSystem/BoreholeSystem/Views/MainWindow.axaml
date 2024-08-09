@@ -13,12 +13,10 @@
         mc:Ignorable="d"
 		Background="White">
 
-	<Design.DataContext>
-		<vm:MainWindowViewModel />
-	</Design.DataContext>
-
 	<Grid>
-		<TransitioningContentControl Name="TabsControl" Content="{Binding CurrentPage}" />
+		<TransitioningContentControl Name="TabsControl">
+			<!-- Вложенный контент -->
+		</TransitioningContentControl>
 
 	</Grid>
 </Window>

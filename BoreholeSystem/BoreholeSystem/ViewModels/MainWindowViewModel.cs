@@ -1,20 +1,29 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using BoreholeSystem.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BoreholeSystem.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {
-        public MainWindowViewModel()
+        private readonly INavigationService _navigationService;
+
+        public MainWindowViewModel(INavigationService navigationService)
         {
-            _currentPage = new MainViewModel();
+            _navigationService = navigationService;
+            Navigate();
         }
 
-        [ObservableProperty]
-        private PageViewModelBase _currentPage;
+
+        private void Navigate()
+        {
+            _navigationService.NavigateTo<MainViewModel>();
+        }
     }
 }
