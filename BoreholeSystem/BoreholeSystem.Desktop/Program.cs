@@ -1,5 +1,7 @@
 ﻿using Avalonia;
+using Avalonia.ReactiveUI;
 using System;
+using System.Collections.ObjectModel;
 
 namespace BoreholeSystem.Desktop
 {
@@ -14,9 +16,11 @@ namespace BoreholeSystem.Desktop
 
         // Avalonia configuration, don't remove; also used by visual designer.
         public static AppBuilder BuildAvaloniaApp()
-            => AppBuilder.Configure<App>()
-                .UsePlatformDetect()
-                .WithInterFont()
-                .LogToTrace();
+        => AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+            .WithInterFont()
+            .With(new Win32PlatformOptions { RenderingMode = new Collection<Win32RenderingMode> { Win32RenderingMode.Wgl } })
+            .LogToTrace()
+            .UseReactiveUI();
     }
 }

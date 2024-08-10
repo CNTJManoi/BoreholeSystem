@@ -1,9 +1,11 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:dialogHost="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:progRing="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing"
              xmlns:vm="clr-namespace:BoreholeSystem.ViewModels"
+			 xmlns:ogl="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="BoreholeSystem.Views.InclinometerControlView"
              x:DataType="vm:InclinometerControlViewModel">
@@ -50,7 +52,19 @@
 			<Setter Property="Foreground" Value="White"/>
 		</Style>
 	</UserControl.Styles>
+	<dialogHost:DialogHost Background="White" OverlayBackground="Black" DisableOpeningAnimation="True" Name="Dialog" CloseOnClickAway="True" IsOpen="{Binding IsError}">
+		<dialogHost:DialogHost.DialogContent>
+				<Grid Width="500">
+					<Grid.RowDefinitions>
+						<RowDefinition/>
+						<RowDefinition/>
+					</Grid.RowDefinitions>
+					<TextBlock Foreground="Black" HorizontalAlignment="Center" TextWrapping="Wrap" Grid.Row="0" FontSize="22" Text="{Binding ErrorMessage}"></TextBlock>
+					<Button HorizontalAlignment="Center" Grid.Row="1" Margin="0,10,0,0" Command="{Binding ConfirmErrorCommand}" Content="Подтвердить"></Button>
+				</Grid>
+		</dialogHost:DialogHost.DialogContent>
 	<Grid>
+			
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="0.3*"/>
 			<ColumnDefinition Width="0.7*"/>
@@ -104,16 +118,20 @@
 				
 			</StackPanel>
 			<StackPanel Grid.Row="1" Margin="10,10,0,0">
-				<StackPanel Orientation="Horizontal">
-					<TextBlock FontSize="22" Text="Значение по оси Y: " Foreground="Black"/>
+				<StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+					<TextBlock FontSize="22" Text="Угол относительно оси X: " Foreground="Black"/>
+					<TextBlock FontSize="22" Text="{Binding OxisX}" Foreground="Black"/>
+				</StackPanel>
+				<StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+					<TextBlock FontSize="22" Text="Угол относительно оси Y: " Foreground="Black"/>
 					<TextBlock FontSize="22" Text="{Binding OxisY}" Foreground="Black"/>
 				</StackPanel>
 				<StackPanel Margin="0,10,0,0" Orientation="Horizontal">
-					<TextBlock FontSize="22" Text="Значение по оси X: " Foreground="Black"/>
-					<TextBlock FontSize="22" Text="{Binding OxisX}" Foreground="Black"/>
+					<TextBlock FontSize="22" Text="Направление по оси Z: " Foreground="Black"/>
+					<TextBlock FontSize="22" Text="{Binding OxisZ}" Foreground="Black"/>
 				</StackPanel>
 			</StackPanel>
-			<StackPanel Grid.Row="2" >
+			<StackPanel Grid.Row="2">
 
 				<Button Foreground="White" FontSize="22" HorizontalAlignment="Center" Content="Получить данные" Command="{Binding WorkCommand}"/>
 				<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
@@ -123,4 +141,5 @@
 			</StackPanel>
 		</Grid>
 	</Grid>
+	</dialogHost:DialogHost>
 </UserControl>

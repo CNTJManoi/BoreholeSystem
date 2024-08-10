@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoreholeSystem", "BoreholeSystem\BoreholeSystem\BoreholeSystem.csproj", "{35630F76-23E7-4156-9136-4A671582CFD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoreholeSystem", "BoreholeSystem\BoreholeSystem\BoreholeSystem.csproj", "{35630F76-23E7-4156-9136-4A671582CFD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoreholeSystem.Desktop", "BoreholeSystem\BoreholeSystem.Desktop\BoreholeSystem.Desktop.csproj", "{2743E10A-CF35-4324-AF7E-4836BBAAAB66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoreholeSystem.Desktop", "BoreholeSystem\BoreholeSystem.Desktop\BoreholeSystem.Desktop.csproj", "{2743E10A-CF35-4324-AF7E-4836BBAAAB66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoreholeSystem.Browser", "BoreholeSystem\BoreholeSystem.Browser\BoreholeSystem.Browser.csproj", "{6D8D0996-1FA5-4DF0-9348-E61D9CF82BE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoreholeSystem.Browser", "BoreholeSystem\BoreholeSystem.Browser\BoreholeSystem.Browser.csproj", "{6D8D0996-1FA5-4DF0-9348-E61D9CF82BE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoreholeSystemModelVisualizator", "BoreholeSystemModelVisualizator\BoreholeSystemModelVisualizator.csproj", "{C48E6C6E-05DF-459E-AB0D-D6689CAE2FDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{6D8D0996-1FA5-4DF0-9348-E61D9CF82BE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D8D0996-1FA5-4DF0-9348-E61D9CF82BE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D8D0996-1FA5-4DF0-9348-E61D9CF82BE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C48E6C6E-05DF-459E-AB0D-D6689CAE2FDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C48E6C6E-05DF-459E-AB0D-D6689CAE2FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C48E6C6E-05DF-459E-AB0D-D6689CAE2FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C48E6C6E-05DF-459E-AB0D-D6689CAE2FDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

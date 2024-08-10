@@ -3,6 +3,8 @@ using Avalonia.Threading;
 using BoreholeSystem.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DialogHostAvalonia;
+using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,17 +23,21 @@ namespace BoreholeSystem.ViewModels
         private readonly Timer _timer;
         private SerialPort _serialPort;
         private double[] _yValues = new double[5];
+        private double[] _zValues = new double[5];
         private double[] _xValues = new double[5];
         private int _valueIndex = 0;
+        private Quaternion quanterion;
         private int _valuesReceived = 0;
 
         public InclinometerControlViewModel(INavigationService navigationService)
-        {   
+        {
             _navigationService = navigationService;
             // Инициализация доступных портов
             AvailablePorts = new ObservableCollection<string>();
             OxisY = "0";
-            oxisX = "0";
+            errorMessage = "";
+            OxisX = "0";
+            OxisZ = "0";
             // Установка начального статуса
             UpdateDeviceStatus(false);
 
@@ -41,6 +47,9 @@ namespace BoreholeSystem.ViewModels
             UpdateAvailablePorts();
         }
         public InclinometerControlViewModel() { }
+
+        [ObservableProperty]
+        private string errorMessage;
 
         // Список доступных портов
         [ObservableProperty]
@@ -66,7 +75,14 @@ namespace BoreholeSystem.ViewModels
         private string oxisX;
 
         [ObservableProperty]
+        private string oxisZ;
+
+        [ObservableProperty]
         private bool isLoading;
+
+        [ObservableProperty]
+        private bool isError;
+
         // Команда для подтверждения выбора
         [RelayCommand]
         private void Confirm()
@@ -123,14 +139,27 @@ namespace BoreholeSystem.ViewModels
             {
                 if (!string.IsNullOrEmpty(selectedPort))
                 {
-                    _valueIndex = 0;
-                    _valuesReceived = 0;
-                    _serialPort = new SerialPort(selectedPort, 115200);
-                    _serialPort.DataReceived += OnDataReceived;
-                    _serialPort.Open();
-                    IsLoading = true;
+                    try
+                    {
+                        _valueIndex = 0;
+                        _valuesReceived = 0;
+                        _serialPort = new SerialPort(selectedPort, 115200);
+                        _serialPort.DataReceived += OnDataReceived;
+                        _serialPort.Open();
+                        IsLoading = true;
+                    }
+                    catch (Exception e)
+                    {
+                        ErrorMessage = "Возникла ошибка при подключении к плате: " + e.Message;
+                        IsError = true;
+                    }
                 }
             }
+        }
+        [RelayCommand]
+        private void ConfirmError()
+        {
+            IsError = false;
         }
         private void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
@@ -142,6 +171,10 @@ namespace BoreholeSystem.ViewModels
             if (parts.Length >= 3)
             {
                 // Преобразование значений и сохранение в массивы
+                if (double.TryParse(parts[0].Replace('.', ','), out double zValue))
+                {
+                    _zValues[_valueIndex] = zValue;
+                }
                 if (double.TryParse(parts[1].Replace('.',','), out double yValue))
                 {
                     _yValues[_valueIndex] = yValue;
@@ -159,6 +192,8 @@ namespace BoreholeSystem.ViewModels
                     // Вычисление среднего значения
                     OxisY = _yValues.Average().ToString("F2");
                     OxisX = _xValues.Average().ToString("F2");
+                    OxisZ = _zValues.Average().ToString("F2");
+                    GetQuant();
                     StopReading();
                     IsLoading = false;
                 }
@@ -168,6 +203,24 @@ namespace BoreholeSystem.ViewModels
         private void StopReading()
         {
             _serialPort.Close();
+        }
+        private void GetQuant()
+        {
+            _serialPort.WriteLine("quant");
+            Task.Delay(1);
+            string data = _serialPort.ReadLine();
+            var parts = data.Split(',');
+            if (parts.Length >= 4)
+            {
+                if (float.TryParse(parts[0].Replace('.', ','), out float w)
+                    && float.TryParse(parts[1].Replace('.', ','), out float x)
+                    && float.TryParse(parts[2].Replace('.', ','), out float y)
+                    && float.TryParse(parts[3].Replace('.', ','), out float z))
+                {
+                    quanterion = new Quaternion(x, y, z, w);
+                }
+            }
+            else GetQuant();
         }
     }
 }

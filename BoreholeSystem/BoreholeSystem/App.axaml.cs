@@ -10,6 +10,7 @@ using BoreholeSystem.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using BoreholeSystem.Utils;
 
 namespace BoreholeSystem
 {
@@ -24,16 +25,15 @@ namespace BoreholeSystem
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                // Line below is needed to remove Avalonia data validation.
-                // Without this line you will get duplicate validations from both Avalonia and CT
                 BindingPlugins.DataValidators.RemoveAt(0);
                 var mainWindow = new MainWindow();
 
                 var serviceProvider = ConfigureServices(mainWindow);
 
                 var navigationService = new NavigationService(mainWindow, serviceProvider);
+                var wPFservice = new WPFService();
 
-                var mainWindowViewModel = new MainWindowViewModel(navigationService);
+                var mainWindowViewModel = new MainWindowViewModel(navigationService, wPFservice);
                 var mainViewModel = new MainViewModel(navigationService);
                 mainWindow.DataContext = mainWindowViewModel;
 
@@ -57,6 +57,7 @@ namespace BoreholeSystem
             services.AddSingleton<InclinometerControlViewModel>();
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<IWPFService, WPFService>();
 
             return services.BuildServiceProvider();
         }
