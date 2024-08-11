@@ -20,7 +20,7 @@
 					<Path Fill="Black" Stretch="Uniform" Data="M10,20 L30,40 L30,30 L20,20 L30,10 L30,0 L10,20 Z"/>
 				</Button>
 			</StackPanel>
-			<Button FontSize="24" Margin="0,0,10,0" Content="Инклинометр"></Button>
+			<Button Command="{Binding GetIncDataCommand}" FontSize="24" Margin="0,0,10,0" Content="Инклинометр"></Button>
 			<Button FontSize="24" Margin="0,0,10,0" Content="Термокоса"></Button>
 		</StackPanel>
 			<DataGrid Grid.Row="1" ColumnWidth="*" ItemsSource="{Binding InclinometerData}" AutoGenerateColumns="False">

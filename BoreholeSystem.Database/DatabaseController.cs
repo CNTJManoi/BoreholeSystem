@@ -10,10 +10,10 @@ namespace BoreholeSystem.Database
     public class DatabaseController
     {
         private ApplicationContext _applicationContext;
-        public DatabaseController() 
+        public  DatabaseController() 
         {
             _applicationContext = new ApplicationContext();
-            _applicationContext.Database.EnsureCreated();
+            
         }
         public void AddInclinometerData(DateTime dateTime, float x, float y, float z, float temp)
         {
@@ -31,6 +31,10 @@ namespace BoreholeSystem.Database
         public List<InclinometerModel> GetInclinometersData()
         {
             return _applicationContext.InclinometersData.ToList();
+        }
+        public void Create()
+        {
+            _applicationContext.Database.EnsureCreated();
         }
     }
 }

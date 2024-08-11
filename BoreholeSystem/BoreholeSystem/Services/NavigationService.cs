@@ -27,7 +27,7 @@ namespace BoreholeSystem.Services
             var view = ViewLocator.GetView(viewModel);
             if (view != null)
             {
-                _mainWindow.Content = view;
+                _mainWindow.TabsControl.Content = view;
             }
         }
     }

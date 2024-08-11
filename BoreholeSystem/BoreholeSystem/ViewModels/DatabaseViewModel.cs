@@ -23,7 +23,7 @@ namespace BoreholeSystem.ViewModels
             _navigationService = navigationService;
             _wpfService = wpfService;
             _databaseController = new DatabaseController();
-            inclinometerData = new ObservableCollection<InclinometerModel>(_databaseController.GetInclinometersData());
+            InclinometerData = new ObservableCollection<InclinometerModel>(_databaseController.GetInclinometersData());
         }
         
         public DatabaseViewModel() { }
@@ -34,6 +34,11 @@ namespace BoreholeSystem.ViewModels
         public void Exit()
         {
             _navigationService.NavigateTo<MainViewModel>();
+        }
+        [RelayCommand]
+        public void GetIncData()
+        {
+            InclinometerData = new ObservableCollection<InclinometerModel>(_databaseController.GetInclinometersData());
         }
     }
 }

@@ -6,7 +6,6 @@ using BoreholeSystem.Utils;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DialogHostAvalonia;
-using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,9 +28,12 @@ namespace BoreholeSystem.ViewModels
         private SerialPort _serialPort;
         private double[] _yValues = new double[5];
         private double[] _zValues = new double[5];
+        private float? X;
+        private float? Y;
+        private float? Z;
+        private float? W;
         private double[] _xValues = new double[5];
         private int _valueIndex = 0;
-        private Quaternion? quanterion;
         private int _valuesReceived = 0;
         private bool IsStandartData = false;
         private DateTime MeasuringDateTime;
@@ -210,14 +212,14 @@ namespace BoreholeSystem.ViewModels
         private void ShowModel()
         {
             GetQuant();
-            if (quanterion != null)
+            if (X != null && Y != null && Z != null && W != null)
             {
                 string[] parameters =
                 [
-                    quanterion.Value.X.ToString(),
-                    quanterion.Value.Y.ToString(),
-                    quanterion.Value.Z.ToString(),
-                    quanterion.Value.W.ToString(),
+                    X.ToString(),
+                    Y.ToString(),
+                    Z.ToString(),
+                    W.ToString(),
                 ];
                 StartWpfApp(parameters);
             }
@@ -306,7 +308,10 @@ namespace BoreholeSystem.ViewModels
                         {
                             GetQuant();
                         }
-                        quanterion = new Quaternion(x, y, z, w);
+                        X = x;
+                        Y = y;
+                        Z = z;
+                        W = w;
                         StopReading();
                     }
                 }

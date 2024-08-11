@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using BoreholeSystem.Utils;
+using BoreholeSystem.Database;
 
 namespace BoreholeSystem
 {
@@ -32,6 +33,9 @@ namespace BoreholeSystem
 
                 var navigationService = new NavigationService(mainWindow, serviceProvider);
                 var wPFservice = new WPFService();
+                var databaseService = new DatabaseController();
+                databaseService.Create();
+                databaseService = null;
 
                 var mainWindowViewModel = new MainWindowViewModel(navigationService, wPFservice);
                 var mainViewModel = new MainViewModel(navigationService);

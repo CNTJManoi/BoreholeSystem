@@ -26,7 +26,6 @@
 	</i:Interaction.Behaviors>
 	<Grid>
 		<TransitioningContentControl Name="TabsControl">
-			<!-- Вложенный контент -->
 		</TransitioningContentControl>
 
 	</Grid>
