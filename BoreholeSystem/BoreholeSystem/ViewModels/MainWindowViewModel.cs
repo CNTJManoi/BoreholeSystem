@@ -28,5 +28,11 @@ namespace BoreholeSystem.ViewModels
         {
             _navigationService.NavigateTo<MainViewModel>();
         }
+
+        [RelayCommand]
+        public void OnClosing()
+        {
+            _wpfService.StopWpfApplication();
+        }
     }
 }

@@ -1,12 +1,52 @@
 ﻿<Window x:Class="BoreholeSystemModelVisualizator.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:helix="http://helix-toolkit.org/wpf"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BoreholeSystemModelVisualizator"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <helix:HelixViewport3D x:Name="helixViewport">
+            <helix:DefaultLights />
 
+            <!-- Оси X, Y, Z -->
+            <helix:ArrowVisual3D Direction="1,0,0"
+                                 Diameter="0.05"
+                                 HeadLength="0.2"
+                                 Fill="Red" />
+            <helix:ArrowVisual3D Direction="0,1,0"
+                                 Diameter="0.05"
+                                 HeadLength="0.2"
+                                 Fill="Green" />
+            <helix:ArrowVisual3D Direction="0,0,1"
+                                 Diameter="0.05"
+                                 HeadLength="0.2"
+                                 Fill="Blue" />
+
+            <!-- Модель инклинометра -->
+            <ModelVisual3D x:Name="inclinometerModel">
+                <ModelVisual3D.Children>
+
+                    <!-- Нижняя синяя часть -->
+                    <helix:BoxVisual3D 
+                        Width="0.2"
+                                       Center="0,0,-1"
+                                       Height="2"
+                                       Fill="Blue">
+                    </helix:BoxVisual3D>
+
+                    <!-- Верхняя красная часть -->
+                    <helix:BoxVisual3D Width="0.2"
+                                       Center="0,0,1"
+                                       Height="2"
+                                       Fill="Red">
+                    </helix:BoxVisual3D>
+
+                </ModelVisual3D.Children>
+            </ModelVisual3D>
+
+        </helix:HelixViewport3D>
     </Grid>
 </Window>

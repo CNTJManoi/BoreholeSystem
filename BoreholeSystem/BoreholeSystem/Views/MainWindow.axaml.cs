@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using BoreholeSystem.ViewModels;
+using System.ComponentModel;
 
 namespace BoreholeSystem.Views
 {

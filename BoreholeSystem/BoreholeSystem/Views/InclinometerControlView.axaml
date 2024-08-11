@@ -110,29 +110,32 @@
 			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="0.07*"/>
-				<RowDefinition Height="0.85*"/>
+				<RowDefinition Height="0.2*"/>
 				<RowDefinition Height="0.20*"/>
 			</Grid.RowDefinitions>
 			<StackPanel Margin="-10,10,0,0" Grid.Row="0">
 				<TextBlock HorizontalAlignment="Center" Text="Полученные данные" FontSize="32" Foreground="Black" FontWeight="Bold" Margin="0 0 0 20"/>
-				
 			</StackPanel>
 			<StackPanel Grid.Row="1" Margin="10,10,0,0">
 				<StackPanel Margin="0,10,0,0" Orientation="Horizontal">
-					<TextBlock FontSize="22" Text="Угол относительно оси X: " Foreground="Black"/>
-					<TextBlock FontSize="22" Text="{Binding OxisX}" Foreground="Black"/>
+					<TextBlock FontSize="24" FontWeight="Medium" Text="Угол относительно оси X: " Foreground="Black"/>
+					<TextBlock FontSize="24" Text="{Binding OxisX}" Foreground="Black"/>
 				</StackPanel>
 				<StackPanel Margin="0,10,0,0" Orientation="Horizontal">
-					<TextBlock FontSize="22" Text="Угол относительно оси Y: " Foreground="Black"/>
-					<TextBlock FontSize="22" Text="{Binding OxisY}" Foreground="Black"/>
+					<TextBlock FontSize="24" FontWeight="Medium"  Text="Угол относительно оси Y: " Foreground="Black"/>
+					<TextBlock FontSize="24" Text="{Binding OxisY}" Foreground="Black"/>
 				</StackPanel>
 				<StackPanel Margin="0,10,0,0" Orientation="Horizontal">
-					<TextBlock FontSize="22" Text="Направление по оси Z: " Foreground="Black"/>
-					<TextBlock FontSize="22" Text="{Binding OxisZ}" Foreground="Black"/>
+					<TextBlock FontSize="24" FontWeight="Medium" Text="Направление по оси Z: " Foreground="Black"/>
+					<TextBlock FontSize="24" Text="{Binding OxisZ}" Foreground="Black"/>
+				</StackPanel>
+				<StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+					<TextBlock FontSize="24" FontWeight="Medium" Text="Температура устройства: " Foreground="Black"/>
+					<TextBlock FontSize="24" Text="{Binding Temperature}" Foreground="Black"/>
 				</StackPanel>
 			</StackPanel>
 			<StackPanel Grid.Row="2">
-
+				<Button Foreground="White" FontSize="22" HorizontalAlignment="Center" Content="Отобразить 3D модель" Command="{Binding ShowModelCommand}"/>
 				<Button Foreground="White" FontSize="22" HorizontalAlignment="Center" Content="Получить данные" Command="{Binding WorkCommand}"/>
 				<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
 					<TextBlock FontSize="22" IsVisible="{Binding IsLoading}" VerticalAlignment="Center" Foreground="Black" Text="Идет загрузка данных"></TextBlock>

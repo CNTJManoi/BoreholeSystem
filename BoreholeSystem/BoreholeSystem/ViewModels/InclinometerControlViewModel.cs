@@ -1,6 +1,7 @@
 ﻿using Avalonia.Media;
 using Avalonia.Threading;
 using BoreholeSystem.Services;
+using BoreholeSystem.Utils;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DialogHostAvalonia;
@@ -11,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Input;
@@ -20,18 +22,21 @@ namespace BoreholeSystem.ViewModels
     public partial class InclinometerControlViewModel : ViewModelBase
     {
         private readonly INavigationService _navigationService;
-        private readonly Timer _timer;
+        private readonly IWPFService _wpfService;
+        private readonly System.Timers.Timer _timer;
         private SerialPort _serialPort;
         private double[] _yValues = new double[5];
         private double[] _zValues = new double[5];
         private double[] _xValues = new double[5];
         private int _valueIndex = 0;
-        private Quaternion quanterion;
+        private Quaternion? quanterion;
         private int _valuesReceived = 0;
+        private bool IsStandartData = false;
 
-        public InclinometerControlViewModel(INavigationService navigationService)
+        public InclinometerControlViewModel(INavigationService navigationService, IWPFService wpfService)
         {
             _navigationService = navigationService;
+            _wpfService = wpfService;
             // Инициализация доступных портов
             AvailablePorts = new ObservableCollection<string>();
             OxisY = "0";
@@ -41,7 +46,7 @@ namespace BoreholeSystem.ViewModels
             // Установка начального статуса
             UpdateDeviceStatus(false);
 
-            _timer = new Timer(1000); // 1000 мс = 1 секунда
+            _timer = new System.Timers.Timer(1000); // 1000 мс = 1 секунда
             _timer.Elapsed += OnTimerElapsed;
             _timer.Start();
             UpdateAvailablePorts();
@@ -83,6 +88,9 @@ namespace BoreholeSystem.ViewModels
         [ObservableProperty]
         private bool isError;
 
+        [ObservableProperty]
+        private string temperature;
+
         // Команда для подтверждения выбора
         [RelayCommand]
         private void Confirm()
@@ -91,7 +99,7 @@ namespace BoreholeSystem.ViewModels
             if (availablePorts.Contains(selectedPortWithWork))
             {
                 UpdateDeviceStatus(true);
-                
+
             }
             else
             {
@@ -141,12 +149,15 @@ namespace BoreholeSystem.ViewModels
                 {
                     try
                     {
+                        IsStandartData = true;
                         _valueIndex = 0;
                         _valuesReceived = 0;
                         _serialPort = new SerialPort(selectedPort, 115200);
                         _serialPort.DataReceived += OnDataReceived;
                         _serialPort.Open();
                         IsLoading = true;
+                        _serialPort.WriteLine("");
+                        _serialPort.WriteLine("get");
                     }
                     catch (Exception e)
                     {
@@ -161,66 +172,154 @@ namespace BoreholeSystem.ViewModels
         {
             IsError = false;
         }
+
+        [RelayCommand]
+        private void ShowModel()
+        {
+            GetQuant();
+            if (quanterion != null)
+            {
+                string[] parameters =
+                [
+                    quanterion.Value.X.ToString(),
+                    quanterion.Value.Y.ToString(),
+                    quanterion.Value.Z.ToString(),
+                    quanterion.Value.W.ToString(),
+                ];
+                StartWpfApp(parameters);
+            }
+        }
         private void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            string data = _serialPort.ReadLine();
-
-            // Разделение строки на части
-            var parts = data.Split(',');
-
-            if (parts.Length >= 3)
+            if (IsStandartData)
             {
-                // Преобразование значений и сохранение в массивы
-                if (double.TryParse(parts[0].Replace('.', ','), out double zValue))
-                {
-                    _zValues[_valueIndex] = zValue;
-                }
-                if (double.TryParse(parts[1].Replace('.',','), out double yValue))
-                {
-                    _yValues[_valueIndex] = yValue;
-                }
-                if (double.TryParse(parts[2].Replace('.', ','), out double xValue))
-                {
-                    _xValues[_valueIndex] = xValue;
-                }
+                string data = _serialPort.ReadLine();
 
-                _valueIndex++;
-                _valuesReceived++;
+                // Разделение строки на части
+                var parts = data.Split(',');
 
-                if (_valuesReceived >= 5)
+                if (parts.Length >= 3)
                 {
-                    // Вычисление среднего значения
-                    OxisY = _yValues.Average().ToString("F2");
-                    OxisX = _xValues.Average().ToString("F2");
-                    OxisZ = _zValues.Average().ToString("F2");
-                    GetQuant();
-                    StopReading();
-                    IsLoading = false;
+                    // Преобразование значений и сохранение в массивы
+                    if (double.TryParse(parts[0].Replace('.', ','), out double zValue))
+                    {
+                        _zValues[_valueIndex] = zValue;
+                    }
+                    if (double.TryParse(parts[1].Replace('.', ','), out double yValue))
+                    {
+                        _yValues[_valueIndex] = yValue;
+                    }
+                    if (double.TryParse(parts[2].Replace('.', ','), out double xValue))
+                    {
+                        _xValues[_valueIndex] = xValue;
+                    }
+
+                    _valueIndex++;
+                    _valuesReceived++;
+
+                    if (_valuesReceived >= 5)
+                    {
+                        // Вычисление среднего значения
+                        OxisY = _yValues.Average().ToString("F2");
+                        OxisX = _xValues.Average().ToString("F2");
+                        OxisZ = _zValues.Average().ToString("F2");
+                        GetQuant();
+                        GetTemp();
+                        StopReading();
+                        IsLoading = false;
+                        IsStandartData = false;
+                        return;
+                    }
+                    Thread.Sleep(1000);
+                    _serialPort.WriteLine("get");
                 }
             }
         }
 
         private void StopReading()
         {
+            if(_serialPort != null)
+            {
             _serialPort.Close();
+            _serialPort = null;
+            }
         }
         private void GetQuant()
         {
-            _serialPort.WriteLine("quant");
-            Task.Delay(1);
-            string data = _serialPort.ReadLine();
-            var parts = data.Split(',');
-            if (parts.Length >= 4)
+            if (selectedPort != null)
             {
-                if (float.TryParse(parts[0].Replace('.', ','), out float w)
-                    && float.TryParse(parts[1].Replace('.', ','), out float x)
-                    && float.TryParse(parts[2].Replace('.', ','), out float y)
-                    && float.TryParse(parts[3].Replace('.', ','), out float z))
+                if (_serialPort == null)
                 {
-                    quanterion = new Quaternion(x, y, z, w);
+                    _serialPort = new SerialPort(selectedPort, 115200);
+                    _serialPort.Open();
                 }
+                _serialPort.WriteLine("");
+                _serialPort.WriteLine("quant");
+                string data = _serialPort.ReadLine();
+                var parts = data.Split(',');
+                if (parts.Length >= 4)
+                {
+                    if (float.TryParse(parts[0].Replace('.', ','), out float w)
+                        && float.TryParse(parts[1].Replace('.', ','), out float x)
+                        && float.TryParse(parts[2].Replace('.', ','), out float y)
+                        && float.TryParse(parts[3].Replace('.', ','), out float z))
+                    {
+                        if (w > 1.0 || w < -1.0
+                            || x > 1.0 || x < -1.0
+                            || y > 1.0 || y < -1.0
+                            || z > 1.0 || z < -1.0)
+                        {
+                            GetQuant();
+                        }
+                        quanterion = new Quaternion(x, y, z, w);
+                        StopReading();
+                    }
+                }
+                else GetQuant();
             }
-            else GetQuant();
+            else
+            {
+                ErrorMessage = "Выберите устройство и выполните подключение!";
+                IsError = true;
+            }
+        }
+
+        private void GetTemp()
+        {
+            if (selectedPort != null)
+            {
+                if (_serialPort == null)
+                {
+                    _serialPort = new SerialPort(selectedPort, 115200);
+                    _serialPort.Open();
+                }
+                _serialPort.WriteLine("");
+                _serialPort.WriteLine("temp");
+                string data = _serialPort.ReadLine();
+                var parts = data.Split(',');
+                if (parts.Length >= 1)
+                {
+                    if (float.TryParse(parts[0].Replace('.', ','), out float temp))
+                    {
+                        Temperature = temp.ToString() + " °C";
+                        StopReading();
+                    }
+                }
+                else GetQuant();
+            }
+            else
+            {
+                ErrorMessage = "Выберите устройство и выполните подключение!";
+                IsError = true;
+            }
+        }
+        private void StartWpfApp(string[] parameters)
+        {
+            _wpfService.StartWpfApplication(parameters);
+        }
+        private void StopWpfApp()
+        {
+            _wpfService.StopWpfApplication();
         }
     }
 }
