@@ -12,11 +12,11 @@
             <helix:DefaultLights />
 
             <!-- Оси X, Y, Z -->
-            <helix:ArrowVisual3D Direction="1,0,0"
+            <helix:ArrowVisual3D Direction="0,1,0"
                                  Diameter="0.05"
                                  HeadLength="0.2"
                                  Fill="Red" />
-            <helix:ArrowVisual3D Direction="0,1,0"
+            <helix:ArrowVisual3D Direction="-1,0,0"
                                  Diameter="0.05"
                                  HeadLength="0.2"
                                  Fill="Green" />

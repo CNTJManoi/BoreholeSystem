@@ -1,5 +1,6 @@
 ﻿using Avalonia.Media;
 using Avalonia.Threading;
+using BoreholeSystem.Database;
 using BoreholeSystem.Services;
 using BoreholeSystem.Utils;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -23,6 +24,7 @@ namespace BoreholeSystem.ViewModels
     {
         private readonly INavigationService _navigationService;
         private readonly IWPFService _wpfService;
+        private DatabaseController _databaseController;
         private readonly System.Timers.Timer _timer;
         private SerialPort _serialPort;
         private double[] _yValues = new double[5];
@@ -32,17 +34,21 @@ namespace BoreholeSystem.ViewModels
         private Quaternion? quanterion;
         private int _valuesReceived = 0;
         private bool IsStandartData = false;
+        private DateTime MeasuringDateTime;
+        private bool IsRunFirst = false;
 
         public InclinometerControlViewModel(INavigationService navigationService, IWPFService wpfService)
         {
             _navigationService = navigationService;
             _wpfService = wpfService;
+            _databaseController = new DatabaseController();
             // Инициализация доступных портов
             AvailablePorts = new ObservableCollection<string>();
-            OxisY = "0";
+            OxisY = "0°";
             errorMessage = "";
-            OxisX = "0";
-            OxisZ = "0";
+            OxisX = "0°";
+            OxisZ = "0°";
+            Temperature = "0 °C";
             // Установка начального статуса
             UpdateDeviceStatus(false);
 
@@ -50,6 +56,7 @@ namespace BoreholeSystem.ViewModels
             _timer.Elapsed += OnTimerElapsed;
             _timer.Start();
             UpdateAvailablePorts();
+            IsLoading = false;
         }
         public InclinometerControlViewModel() { }
 
@@ -145,14 +152,14 @@ namespace BoreholeSystem.ViewModels
         {
             if (!IsLoading)
             {
-                if (!string.IsNullOrEmpty(selectedPort))
+                if (!string.IsNullOrEmpty(selectedPortWithWork))
                 {
                     try
                     {
                         IsStandartData = true;
                         _valueIndex = 0;
                         _valuesReceived = 0;
-                        _serialPort = new SerialPort(selectedPort, 115200);
+                        _serialPort = new SerialPort(selectedPortWithWork, 115200);
                         _serialPort.DataReceived += OnDataReceived;
                         _serialPort.Open();
                         IsLoading = true;
@@ -165,12 +172,38 @@ namespace BoreholeSystem.ViewModels
                         IsError = true;
                     }
                 }
+                else
+                {
+                    ErrorMessage = "Выберите устройство и выполните подключение!";
+                    IsError = true;
+                }
             }
         }
         [RelayCommand]
         private void ConfirmError()
         {
             IsError = false;
+        }
+
+        [RelayCommand]
+        private void SaveInDatabase()
+        {
+            if (IsRunFirst)
+            {
+                _databaseController.AddInclinometerData(
+                    MeasuringDateTime, 
+                    float.Parse(OxisX.Replace('°',' ').Replace('.',',')),
+                    float.Parse(OxisY.Replace('°', ' ').Replace('.', ',')),
+                    float.Parse(OxisZ.Replace('°', ' ').Replace('.', ',')),
+                    float.Parse(Temperature.Replace('°', ' ').Replace('C',' ').Replace('.', ',')));
+                ErrorMessage = "Измерение записано в базу данных";
+                IsError = true;
+            }
+            else
+            {
+                ErrorMessage = "Данные об измерении отсутствуют...";
+                IsError = true;
+            }
         }
 
         [RelayCommand]
@@ -220,14 +253,16 @@ namespace BoreholeSystem.ViewModels
                     if (_valuesReceived >= 5)
                     {
                         // Вычисление среднего значения
-                        OxisY = _yValues.Average().ToString("F2");
-                        OxisX = _xValues.Average().ToString("F2");
-                        OxisZ = _zValues.Average().ToString("F2");
+                        OxisY = _yValues.Average().ToString("F2") + "°";
+                        OxisX = _xValues.Average().ToString("F2") + "°";
+                        OxisZ = _zValues.Average().ToString("F2") + "°";
                         GetQuant();
                         GetTemp();
                         StopReading();
                         IsLoading = false;
                         IsStandartData = false;
+                        IsRunFirst = true;
+                        MeasuringDateTime = DateTime.Now;
                         return;
                     }
                     Thread.Sleep(1000);
@@ -246,11 +281,11 @@ namespace BoreholeSystem.ViewModels
         }
         private void GetQuant()
         {
-            if (selectedPort != null)
+            if (selectedPortWithWork != null)
             {
                 if (_serialPort == null)
                 {
-                    _serialPort = new SerialPort(selectedPort, 115200);
+                    _serialPort = new SerialPort(selectedPortWithWork, 115200);
                     _serialPort.Open();
                 }
                 _serialPort.WriteLine("");
@@ -286,11 +321,11 @@ namespace BoreholeSystem.ViewModels
 
         private void GetTemp()
         {
-            if (selectedPort != null)
+            if (selectedPortWithWork != null)
             {
                 if (_serialPort == null)
                 {
-                    _serialPort = new SerialPort(selectedPort, 115200);
+                    _serialPort = new SerialPort(selectedPortWithWork, 115200);
                     _serialPort.Open();
                 }
                 _serialPort.WriteLine("");
@@ -320,6 +355,11 @@ namespace BoreholeSystem.ViewModels
         private void StopWpfApp()
         {
             _wpfService.StopWpfApplication();
+        }
+        [RelayCommand]
+        public void Exit()
+        {
+            _navigationService.NavigateTo<MainViewModel>();
         }
     }
 }

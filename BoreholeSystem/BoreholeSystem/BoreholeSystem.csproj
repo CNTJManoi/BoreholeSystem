@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.1.1" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.1.1" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="11.1.1" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />    
@@ -29,6 +30,10 @@
     <PackageReference Include="Silk.NET" Version="2.21.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
     <PackageReference Include="System.IO.Ports" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BoreholeSystem.Database\BoreholeSystem.Database.csproj" />
   </ItemGroup>
 
   <ItemGroup>

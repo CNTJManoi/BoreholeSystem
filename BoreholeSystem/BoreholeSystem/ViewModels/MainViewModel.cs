@@ -18,5 +18,11 @@ namespace BoreholeSystem.ViewModels
         {
             _navigationService.NavigateTo<InclinometerControlViewModel>();
         }
+
+        [RelayCommand]
+        private void GoToInDatabase()
+        {
+            _navigationService.NavigateTo<DatabaseViewModel>();
+        }
     }
 }

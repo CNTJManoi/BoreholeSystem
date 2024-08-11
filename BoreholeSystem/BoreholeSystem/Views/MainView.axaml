@@ -27,14 +27,20 @@
 			<Button 
 				HorizontalAlignment="Center" 
 				FontSize="28"
-				Content="Инклинометр"
+				Content="Данные с инклинометра"
 				Margin="0,0,0,10"
 				Command="{Binding GoToInclinometerCommand}"></Button>
 			<Button 
 				HorizontalAlignment="Center" 
 				FontSize="28"
-				Content="Система температур"
+				Content="Система Термокоса"
 				Margin="0,0,0,10"></Button>
+			<Button
+				HorizontalAlignment="Center"
+				FontSize="28"
+				Content="История измерений"
+				Margin="0,0,0,10"
+				Command="{Binding GoToInDatabaseCommand}"></Button>
 		</StackPanel>
 	</Grid>
 </UserControl>

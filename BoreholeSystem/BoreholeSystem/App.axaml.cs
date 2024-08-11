@@ -54,6 +54,7 @@ namespace BoreholeSystem
             var services = new ServiceCollection();
             services.AddSingleton<MainWindow>(mainWindow);
             services.AddSingleton<MainWindowViewModel>();
+            services.AddSingleton<DatabaseViewModel>();
             services.AddSingleton<InclinometerControlViewModel>();
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<INavigationService, NavigationService>();

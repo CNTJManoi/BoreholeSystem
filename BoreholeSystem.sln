@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoreholeSystem.Desktop", "B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoreholeSystem.Browser", "BoreholeSystem\BoreholeSystem.Browser\BoreholeSystem.Browser.csproj", "{6D8D0996-1FA5-4DF0-9348-E61D9CF82BE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoreholeSystemModelVisualizator", "BoreholeSystemModelVisualizator\BoreholeSystemModelVisualizator.csproj", "{C48E6C6E-05DF-459E-AB0D-D6689CAE2FDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoreholeSystemModelVisualizator", "BoreholeSystemModelVisualizator\BoreholeSystemModelVisualizator.csproj", "{C48E6C6E-05DF-459E-AB0D-D6689CAE2FDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoreholeSystem.Database", "BoreholeSystem.Database\BoreholeSystem.Database.csproj", "{A00AC1C9-5DB9-4D1C-876B-2D09144909D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{C48E6C6E-05DF-459E-AB0D-D6689CAE2FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C48E6C6E-05DF-459E-AB0D-D6689CAE2FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C48E6C6E-05DF-459E-AB0D-D6689CAE2FDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A00AC1C9-5DB9-4D1C-876B-2D09144909D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A00AC1C9-5DB9-4D1C-876B-2D09144909D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A00AC1C9-5DB9-4D1C-876B-2D09144909D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A00AC1C9-5DB9-4D1C-876B-2D09144909D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

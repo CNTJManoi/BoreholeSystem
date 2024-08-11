@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:vm="clr-namespace:BoreholeSystem.ViewModels"
+             x:Class="BoreholeSystem.Views.DatabaseView"
+			 x:DataType="vm:DatabaseViewModel">
+	<Design.DataContext>
+		<vm:DatabaseViewModel />
+	</Design.DataContext>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="0.1*"/>
+			<RowDefinition Height="0.9*"/>
+		</Grid.RowDefinitions>
+		<StackPanel Grid.Row="0" Orientation="Horizontal">
+			<StackPanel Margin="0,0,20,0" Orientation="Horizontal">
+				<Button Command="{Binding ExitCommand}" Width="40" Height="40" Background="Transparent" BorderBrush="Transparent">
+					<Path Fill="Black" Stretch="Uniform" Data="M10,20 L30,40 L30,30 L20,20 L30,10 L30,0 L10,20 Z"/>
+				</Button>
+			</StackPanel>
+			<Button FontSize="24" Margin="0,0,10,0" Content="Инклинометр"></Button>
+			<Button FontSize="24" Margin="0,0,10,0" Content="Термокоса"></Button>
+		</StackPanel>
+			<DataGrid Grid.Row="1" ColumnWidth="*" ItemsSource="{Binding InclinometerData}" AutoGenerateColumns="False">
+				<DataGrid.Columns>
+					<DataGridTextColumn Width="*" Header="Номер" Binding="{Binding Id}" />
+					<DataGridTextColumn Width="*" Header="Дата и время" Binding="{Binding DateTime}" />
+					<DataGridTextColumn Width="*" Header="X" Binding="{Binding X}" />
+					<DataGridTextColumn Width="*" Header="Y" Binding="{Binding Y}" />
+					<DataGridTextColumn Width="*" Header="Z" Binding="{Binding Z}" />
+					<DataGridTextColumn Width="*" Header="Температура" Binding="{Binding Temp}" />
+				</DataGrid.Columns>
+				</DataGrid>
+
+	</Grid>
+</UserControl>
