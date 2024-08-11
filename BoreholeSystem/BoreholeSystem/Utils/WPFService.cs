@@ -15,7 +15,7 @@ namespace BoreholeSystem.Utils
         public WPFService()
         {
             _wpfAppName = "BoreholeSystemModelVisualizator"; // Имя процесса WPF-приложения
-            _wpfAppPath = @"C:\Users\lecha\source\repos\BoreholeSystem\BoreholeSystemModelVisualizator\bin\Debug\net8.0-windows\BoreholeSystemModelVisualizator.exe"; // Укажите путь к вашему WPF приложению
+            _wpfAppPath = @"BoreholeSystemModelVisualizator.exe"; // Укажите путь к вашему WPF приложению
         }
         public void StartWpfApplication(string[] args)
         {
